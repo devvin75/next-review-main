@@ -2,6 +2,7 @@
 // import StardewValley from './[slug]/page';
 import Link from 'next/link';
 import Heading from '../components/Heading';
+import Image from 'next/image';
 import { getMoreReviews, getSlugs } from '@/lib/reviews';
 
 export const metadata = {
@@ -28,12 +29,12 @@ export default async function Reviews() {
                       text-black
                       hover:shadow-xl"          >
             <Link href={`/reviews/${review.slug}`}>
-              <img
+              <Image
                 src={review.image}
                 alt=""
-                width="320"
-                height="180"
-                className="rounded-t"
+                width="640"
+                height="360"
+                className="mb-2 rounded"
               />
               <h2
                 className="font-orbitron 
@@ -99,3 +100,9 @@ export default async function Reviews() {
 ]
  * 
  */
+
+/**srcset attribute -- is used for different pixel densities
+ * 2x -- will be used for high density screens
+ */
+
+
