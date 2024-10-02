@@ -1,5 +1,5 @@
 //CONTAINS ALL THE INDIVIDUAL PAGES FOR THE REVIEW 
-
+import Image from 'next/image';
 import { Share } from 'next/font/google';
 import Heading from '../../components/Heading';
 import {getReview, getSlugs} from '@/lib/reviews';
@@ -19,7 +19,8 @@ export async function generateStaticParams(){  //SERVER WILL NOT RE-RENDER THE P
    //return an array specifying which routes are valid
    //  slugs: [ 'hellblade', 'hollow-knight', 'stardew-valley' ]
    const slugs = await getSlugs();   
-   "array of objects" 
+   console.log('[ReviewPage] generateStaticParams: ', slugs)
+   // "array of objects" 
    return slugs.map((slug) => ({slug})); //slug is the object literal 
    // return [
    //    {slug:'hellblade'},
@@ -28,7 +29,7 @@ export async function generateStaticParams(){  //SERVER WILL NOT RE-RENDER THE P
 }
 // Fetch metadata that requires "dynamic" data
 export async function generateMetadata({params:{slug}}){
-   const review = await getSlugs(slug);
+   const review = await getReview(slug);
    return {
       title:review.title
    };
@@ -52,7 +53,7 @@ export default async function ReviewPage({params:{slug}}){
           <ShareButtons/>
           </div>
           {/* Original size is 1280x720 */}
-          <img src={review.image}
+          <Image src={review.image}
              alt=""
              width="640" 
              height="360"
