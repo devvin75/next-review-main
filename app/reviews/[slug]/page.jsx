@@ -4,7 +4,10 @@ import { Share } from 'next/font/google';
 import Heading from '../../components/Heading';
 import {getReview, getSlugs} from '@/lib/reviews';
 import ShareButtons from '../../components/ShareButton';
+import {notFound} from 'next/navigation';
 
+
+export const dynamic = 'force-dynamic';
 
 // GENERATE STATIC PAGES FOR THE FOLLOWING SLUGS EVEN IF USING SYNAMIC ROUTES
 /**This can be used in combination with dynamic route segments
@@ -15,36 +18,50 @@ import ShareButtons from '../../components/ShareButton';
  * where each object represents the populated dynamic segments 
  * of a single route.
  * */
-export async function generateStaticParams(){  //SERVER WILL NOT RE-RENDER THE PAGE
+// export async function generateStaticParams(){  //SERVER WILL NOT RE-RENDER THE PAGE
    //return an array specifying which routes are valid
    //  slugs: [ 'hellblade', 'hollow-knight', 'stardew-valley' ]
-   const slugs = await getSlugs();   
-   console.log('[ReviewPage] generateStaticParams: ', slugs)
+   // const slugs = await getSlugs();   
+   // console.log('[ReviewPage] generateStaticParams: ', slugs)
    // "array of objects" 
-   return slugs.map((slug) => ({slug})); //slug is the object literal 
+   // return slugs.map((slug) => ({slug})); //slug is the object literal 
    // return [
    //    {slug:'hellblade'},
    //    {slug:'hollow-knight'}
    // 
-}
+// }
 // Fetch metadata that requires "dynamic" data
+
+/**This function is used to set the "title" in the HTML head */
 export async function generateMetadata({params:{slug}}){
    const review = await getReview(slug);
+      
+      if(!review){
+         notFound(); //calling this function will automatically stop the normal rendering process
+      }
+
    return {
       title:review.title
    };
 }
 
-//Reviews page props: { params: { slug: 'hollow-knight' }, searchParams: {} }
+//RENDERS THE MAIN PAGE COMPONENT
 /** DYNAMIC ROUTE - 
  *  By making the ReviewPage function asynchronous, you can ensure that 
  *  the page   doesn't render until the review data is available, which can
  *  improve the  perceived performance of your application.*/ 
-export default async function ReviewPage({params:{slug}}){ 
+//---------------------------------------------------------------------------
+export default async function ReviewPage({params:{slug}}){  
+   console.log('[ReviewPage] rendering', slug);
 /**In production it prefetches all the links */    
 //See comment below
   const review = await getReview(slug);
-//   console.log('[ReviewPage] rendering', slug);
+  
+  //Shows message "404 not found" 
+  if(!review){
+   notFound(); //calling this function will automatically stop the normal rendering process
+  } 
+  
   return(
         <>
           <Heading>{review.title}</Heading>
@@ -55,6 +72,7 @@ export default async function ReviewPage({params:{slug}}){
           {/* Original size is 1280x720 */}
           <Image src={review.image}
              alt=""
+             
              width="640" 
              height="360"
              className="mb-2 rounded"
@@ -66,7 +84,7 @@ export default async function ReviewPage({params:{slug}}){
 }
 
 {
-   /* dangerouslySetInnerHTML:
+/* dangerouslySetInnerHTML:
               This is a React property that allows you to inject raw HTML
               content into a component. 
               

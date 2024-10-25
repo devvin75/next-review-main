@@ -1,0 +1,11 @@
+Dynamic rendering.
+1.)Real-Time Data
+--Allows the application to display real-time or frequently updated data.
+
+2.)User-Specific content
+--it's easier to serve personalized content, such as dashboards or user profiles,
+  and update the data based on user interaction.
+  
+3.)Request Time Information
+--dynamic rendering allow you to access information that can ONLY be known
+  at request time, such as cookies or the URL search parameters.  

@@ -5,13 +5,15 @@ import Heading from '../components/Heading';
 import Image from 'next/image';
 import { getMoreReviews, getSlugs } from '@/lib/reviews';
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Reviews',
   description: 'All the reviews'
 };
 
 export default async function Reviews() {
-  const reviews = await getMoreReviews();
+  const reviews = await getMoreReviews(6);
   // console.log('[ReviewsPage] reviews:', reviews)
   
   return (
@@ -20,7 +22,7 @@ export default async function Reviews() {
       {/* flex-wrap: It defines whether the flex items are forced 
        in a single line or can be flowed into multiple lines */}
       <ul className="flex flex-row flex-wrap gap-3">
-        {reviews.map((review) => (
+        {reviews.map((review, index) => (
           <li key={review.slug}
             className="bg-white 
                        border 
@@ -32,6 +34,7 @@ export default async function Reviews() {
               <Image
                 src={review.image}
                 alt=""
+                priority={index === 0}
                 width="640"
                 height="360"
                 className="mb-2 rounded"
